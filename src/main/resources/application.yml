@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/rbac?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf-8 # 指定北京时间
+    username: root
+    password: Xy&278721524
+    driver-class-name: com.mysql.cj.jdbc.Driver # 数据库驱动
+
+  jpa:
+    open-in-view: false
+    database: mysql
+    show-sql: true # 默认false，在日志里显示执行的sql语句
+    hibernate:
+      ddl-auto: update # 指定为update，每次启动项目检测表结构有变化的时候会新增字段，表不存在时会新建
+
