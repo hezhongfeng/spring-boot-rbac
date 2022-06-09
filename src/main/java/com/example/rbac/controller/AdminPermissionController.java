@@ -23,7 +23,10 @@ import com.example.rbac.payload.CreatePermissionDto;
 import com.example.rbac.payload.UpdatePermissionDto;
 import com.example.rbac.repo.PermissionRepo;
 import com.example.rbac.service.PermissionService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
+@Tag(name = "权限", description = "权限相关CRUD接口")
 @RestController
 @RequestMapping("/api/admin/v1/permissions")
 public class AdminPermissionController {
@@ -34,6 +37,7 @@ public class AdminPermissionController {
   @Autowired
   private PermissionService permissionService;
 
+  @Operation(summary = "查询权限列表")
   @GetMapping
   public RespResult<ListResponse<Permission>> getPermissions(ListRequest listRequest) {
 
@@ -66,6 +70,7 @@ public class AdminPermissionController {
     return new RespResult<ListResponse<Permission>>(200, "", listResponse);
   }
 
+  @Operation(summary = "创建权限")
   @PostMapping
   public RespResult<Permission> createPermission(
       @RequestBody @Validated CreatePermissionDto permissionDto) {
@@ -89,7 +94,7 @@ public class AdminPermissionController {
     return new RespResult<Permission>(200, "", permission);
   }
 
-
+  @Operation(summary = "查看权限")
   @GetMapping("/{id}")
   public RespResult<Object> getPermission(@PathVariable("id") Long id) {
     Permission permission = permissionRepo.findById(id).get();
@@ -99,6 +104,7 @@ public class AdminPermissionController {
     return new RespResult<Object>(200, "", permission);
   }
 
+  @Operation(summary = "更新权限")
   @PutMapping("/{id}")
   public RespResult<Object> updatePermission(
       @RequestBody @Validated UpdatePermissionDto permissionDto, @PathVariable("id") Long id) {
@@ -114,6 +120,7 @@ public class AdminPermissionController {
     return new RespResult<Object>(200, "", null);
   }
 
+  @Operation(summary = "删除权限")
   @DeleteMapping()
   public RespResult<Object> deleteRoles(
       @RequestBody @Validated DeleteListRequest deleteListRequest) {

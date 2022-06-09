@@ -25,8 +25,11 @@ import com.example.rbac.payload.CreateUserDto;
 import com.example.rbac.payload.SetPassword;
 import com.example.rbac.payload.UpdateUserDto;
 import com.example.rbac.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 
+@Tag(name = "用户", description = "用户相关CRUD接口")
 @RestController
 @RequestMapping("/api/admin/v1/users")
 class AdminUserController {
@@ -34,6 +37,7 @@ class AdminUserController {
   @Autowired
   private UserService userService;
 
+  @Operation(summary = "查询用户列表")
   @GetMapping
   public RespResult<ListResponse<User>> getUsers(ListRequest listRequest) {
     Sort sort = Sort.by(Sort.Direction.DESC, "id");
@@ -71,6 +75,7 @@ class AdminUserController {
     return new RespResult<ListResponse<User>>(200, "", listResponse);
   }
 
+  @Operation(summary = "创建用户")
   @PostMapping
   public RespResult<Object> createUser(@RequestBody @Validated CreateUserDto userDto) {
     if (userService.existsByUsername(userDto.getUsername())) {
@@ -80,6 +85,7 @@ class AdminUserController {
     return new RespResult<Object>(200, "", null);
   }
 
+  @Operation(summary = "查询用户")
   @GetMapping("/{id}")
   public RespResult<Object> getUser(@PathVariable("id") Long id, HttpServletResponse response) {
     User user = userService.getUserByIdWithRoles(id);
@@ -97,6 +103,7 @@ class AdminUserController {
     return new RespResult<Object>(200, "", user);
   }
 
+  @Operation(summary = "更新用户信息")
   @PutMapping("/{id}")
   public RespResult<Object> UpdateUser(@RequestBody @Validated UpdateUserDto updateUser,
       @PathVariable("id") Long id, HttpServletResponse response) {
@@ -106,6 +113,7 @@ class AdminUserController {
     return new RespResult<Object>(200, "", null);
   }
 
+  @Operation(summary = "更新用户密码")
   @PutMapping("/{id}/password")
   public RespResult<String> UpdateUserPassword(@RequestBody SetPassword setPassword,
       @PathVariable("id") Long id) {
@@ -115,6 +123,7 @@ class AdminUserController {
     return new RespResult<String>(200, "", null);
   }
 
+  @Operation(summary = "删除用户")
   @DeleteMapping()
   public RespResult<Object> deleteUser(
       @RequestBody @Validated DeleteListRequest deleteListRequest) {

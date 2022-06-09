@@ -24,7 +24,10 @@ import com.example.rbac.payload.CreateRoleDto;
 import com.example.rbac.payload.UpdateRoleDto;
 import com.example.rbac.repo.RoleRepo;
 import com.example.rbac.service.RoleService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
+@Tag(name = "角色", description = "角色相关CRUD接口")
 @RestController
 @RequestMapping("/api/admin/v1/roles")
 public class AdminRoleController {
@@ -36,6 +39,7 @@ public class AdminRoleController {
   @Autowired
   private RoleService roleService;
 
+  @Operation(summary = "查询角色列表")
   @GetMapping
   public RespResult<ListResponse<Role>> getRoles(ListRequest listRequest) {
 
@@ -75,6 +79,7 @@ public class AdminRoleController {
     return new RespResult<ListResponse<Role>>(200, "", listResponse);
   }
 
+  @Operation(summary = "创建角色")
   @PostMapping
   public RespResult<Role> createRole(@RequestBody @Validated CreateRoleDto roleDto) {
 
@@ -88,6 +93,7 @@ public class AdminRoleController {
     return new RespResult<Role>(200, "", role);
   }
 
+  @Operation(summary = "查看角色")
   @GetMapping("/{id}")
   public RespResult<Object> getRole(@PathVariable("id") Long id) {
     Role role = roleService.getRoleByIdWithPermissions(id);
@@ -104,6 +110,7 @@ public class AdminRoleController {
     return new RespResult<Object>(200, "", role);
   }
 
+  @Operation(summary = "更新角色")
   @PutMapping("/{id}")
   public RespResult<Object> updateRole(@RequestBody @Validated UpdateRoleDto roleDto,
       @PathVariable("id") Long id) {
@@ -119,6 +126,7 @@ public class AdminRoleController {
     return new RespResult<Object>(200, "", null);
   }
 
+  @Operation(summary = "删除角色")
   @DeleteMapping()
   public RespResult<Object> deleteRoles(
       @RequestBody @Validated DeleteListRequest deleteListRequest) {
