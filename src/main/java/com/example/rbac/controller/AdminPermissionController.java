@@ -1,5 +1,8 @@
 package com.example.rbac.controller;
 
+import java.util.HashSet;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,17 +18,22 @@ import com.example.rbac.config.ListRequest;
 import com.example.rbac.config.ListResponse;
 import com.example.rbac.config.RespResult;
 import com.example.rbac.entity.Permission;
+import com.example.rbac.entity.Role;
 import com.example.rbac.payload.CreatePermissionDto;
 import com.example.rbac.payload.UpdatePermissionDto;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import com.example.rbac.repo.PermissionRepo;
+import com.example.rbac.service.PermissionService;
 
-@Tag(name = "权限", description = "权限相关CRUD接口")
 @RestController
 @RequestMapping("/api/admin/v1/permissions")
 public class AdminPermissionController {
 
-  @Operation(summary = "获取权限列表")
+  @Autowired
+  private PermissionRepo permissionRepo;
+
+  @Autowired
+  private PermissionService permissionService;
+
   @GetMapping
   public RespResult<ListResponse<Permission>> getPermissions(ListRequest listRequest) {
 
@@ -39,43 +47,83 @@ public class AdminPermissionController {
     if (listRequest.getPageSize() != null) {
       pageSize = listRequest.getPageSize();
     }
-    // 分页查询
+    // 分页
+    Pageable pageable = PageRequest.of(pageIndex, pageSize, sort);
+
+    Page<Permission> permissionsPage = permissionService.getAllPermissions(pageable);
 
     ListResponse<Permission> listResponse = new ListResponse<Permission>();
+    listResponse.setCount(permissionsPage.getTotalElements());
+
+    List<Permission> permissionList = permissionsPage.getContent();
+
+    for (Permission permission : permissionList) {
+      // 防止引用循环
+      permission.setRoles(new HashSet<Role>());
+    }
+
+    listResponse.setList(permissionsPage.getContent());
     return new RespResult<ListResponse<Permission>>(200, "", listResponse);
   }
 
-  @Operation(summary = "创建权限")
   @PostMapping
   public RespResult<Permission> createPermission(
       @RequestBody @Validated CreatePermissionDto permissionDto) {
 
+    if (permissionRepo.existsByName(permissionDto.getName())) {
+      return new RespResult<Permission>(201, "无法创建，权限名已存在", null);
+    }
+
+    if (permissionRepo.existsByKeyName(permissionDto.getKeyName())) {
+      return new RespResult<Permission>(201, "无法创建，keyName已存在", null);
+    }
+
     Permission permission = new Permission();
+    permission.setName(permissionDto.getName());
+    permission.setKeyName(permissionDto.getKeyName());
+    permission.setDescription(permissionDto.getDescription());
+
+    permissionRepo.save(permission);
+
+    permission.setRoles(new HashSet<>());
     return new RespResult<Permission>(200, "", permission);
   }
 
 
-  @Operation(summary = "查看权限")
   @GetMapping("/{id}")
   public RespResult<Object> getPermission(@PathVariable("id") Long id) {
-    Permission permission = new Permission();
+    Permission permission = permissionRepo.findById(id).get();
+
+    permission.setRoles(new HashSet<>());
 
     return new RespResult<Object>(200, "", permission);
   }
 
-  @Operation(summary = "更新权限")
   @PutMapping("/{id}")
   public RespResult<Object> updatePermission(
       @RequestBody @Validated UpdatePermissionDto permissionDto, @PathVariable("id") Long id) {
 
+    Permission permission = permissionRepo.findByName(permissionDto.getName());
+
+    if (permission != null && !permission.getId().equals(id)) {
+      return new RespResult<Object>(201, "无法更新，权限名已存在", null);
+    }
+
+    permissionService.updatePermission(permissionDto, id);
+
     return new RespResult<Object>(200, "", null);
   }
 
-  @Operation(summary = "删除权限")
   @DeleteMapping()
   public RespResult<Object> deleteRoles(
       @RequestBody @Validated DeleteListRequest deleteListRequest) {
 
+    if (!permissionService.canDelete(deleteListRequest.getIds())) {
+      return new RespResult<Object>(201, "无法删除，权限已绑定角色", null);
+    }
+
+    // 执行删除
+    permissionService.deletePermissions(deleteListRequest.getIds());
     return new RespResult<Object>(200, "", null);
   }
 
