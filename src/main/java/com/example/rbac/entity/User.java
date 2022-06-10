@@ -8,8 +8,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
-// 命名图
-@NamedEntityGraph(name = "users-with-roles", attributeNodes = {@NamedAttributeNode("roles")})
 @Entity
 public class User {
     @Id // 这是一个主键
