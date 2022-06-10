@@ -15,10 +15,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
-
-@NamedEntityGraph(name = "role-with-permissions",
-    attributeNodes = {@NamedAttributeNode("permissions")})
-@NamedEntityGraph(name = "role-with-users", attributeNodes = {@NamedAttributeNode("users")})
 @Entity
 public class Role {
 
