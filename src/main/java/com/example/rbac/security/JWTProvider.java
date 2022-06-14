@@ -10,21 +10,20 @@ import io.jsonwebtoken.UnsupportedJwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import java.util.Date;
 
-@Component
+
 public class JWTProvider {
 	private static final Logger LOGGER = LoggerFactory.getLogger(JWTProvider.class);
 
 	@Value(value = "${jwt.secret}")
-	private String jwtSecret;
+	private static String jwtSecret;
 
 	@Value(value = "${jwt.expire}")
-	private int jwtExpirationInMs;
+	private static int jwtExpirationInMs;
 
 	// 根据subject生成token
-	public String generateToken(String subject) {
+	public static String generateToken(String subject) {
 
 		long currentTimeMillis = System.currentTimeMillis();
 		Date currentDate = new Date(currentTimeMillis);
@@ -34,13 +33,14 @@ public class JWTProvider {
 				.signWith(SignatureAlgorithm.HS512, jwtSecret).compact();
 	}
 
-	public Long getUserIdFromJWT(String token) {
+	public static Long getUserIdFromJWT(String token) {
 		Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
 
 		return Long.valueOf(claims.getSubject());
 	}
 
-	public boolean validateToken(String authToken) {
+	public static boolean validateToken(String authToken) {
+		System.out.println("authToken: " + authToken);
 		try {
 			Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
 			return true;

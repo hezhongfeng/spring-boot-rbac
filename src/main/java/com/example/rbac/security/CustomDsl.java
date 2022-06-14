@@ -1,16 +1,15 @@
 package com.example.rbac.security;
 
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 public class CustomDsl extends AbstractHttpConfigurer<CustomDsl, HttpSecurity> {
+
   @Override
   public void configure(HttpSecurity http) throws Exception {
-    AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
-
     // 添加我们的 jwt 过滤器
-    http.addFilter(new JWTFilter(authenticationManager));
+    http.addFilterBefore(new JWTFilter(), UsernamePasswordAuthenticationFilter.class);
   }
 
   public static CustomDsl customDsl() {
