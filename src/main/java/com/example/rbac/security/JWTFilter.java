@@ -22,13 +22,18 @@ public class JWTFilter extends OncePerRequestFilter {
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
       FilterChain filterChain) throws ServletException, IOException {
 
+    // 这部分出错后，直接返回401，不再走后面的filter
     try {
+      // 从请求头中获取jwt
       String jwt = getJwtFromRequest(request);
 
+      // 校验 jwt 是否有效，包含了过期的验证
       if (StringUtils.hasText(jwt) && JWTProvider.validateToken(jwt)) {
 
+        // 通过 jwt 获取认证信息
         Authentication authentication = JWTProvider.getAuthentication(jwt);
 
+        // 将认证信息存入 Security 上下文中，可以取出来使用
         SecurityContextHolder.getContext().setAuthentication(authentication);
       }
     } catch (Exception ex) {
