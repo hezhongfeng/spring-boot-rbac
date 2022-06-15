@@ -38,12 +38,6 @@ public class JWTProvider {
 				.signWith(SignatureAlgorithm.HS512, jwtSecret).compact();
 	}
 
-	public static Long getUserIdFromJWT(String token) {
-		Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
-
-		return Long.valueOf(claims.getSubject());
-	}
-
 	public static Authentication getAuthentication(String token) {
 		Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
 		// 从jwt获取用户权限列
