@@ -1,9 +1,7 @@
 package com.example.rbac.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -20,9 +18,6 @@ public class JWTFilter extends OncePerRequestFilter {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(JWTFilter.class);
 
-  @Autowired
-  private CustomUserDetailsService myUserDetailsService;
-
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
       FilterChain filterChain) throws ServletException, IOException {
@@ -31,15 +26,10 @@ public class JWTFilter extends OncePerRequestFilter {
       String jwt = getJwtFromRequest(request);
 
       if (StringUtils.hasText(jwt) && JWTProvider.validateToken(jwt)) {
-        Long userId = JWTProvider.getUserIdFromJWT(jwt);
 
-        UserDetails userDetails = myUserDetailsService.loadUserById(userId);
+        Authentication authentication = JWTProvider.getAuthentication(jwt);
 
-        UsernamePasswordAuthenticationToken authenticationToken =
-            new UsernamePasswordAuthenticationToken(userDetails, null,
-                userDetails.getAuthorities());
-
-        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
       }
     } catch (Exception ex) {
       LOGGER.error("Could not set user authentication in security context", ex);
