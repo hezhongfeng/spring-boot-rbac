@@ -40,6 +40,7 @@ public class JWTFilter extends OncePerRequestFilter {
       LOGGER.error("Could not set user authentication in security context", ex);
     }
 
+    // 继续后面的过滤链
     filterChain.doFilter(request, response);
   }
 
