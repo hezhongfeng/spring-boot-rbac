@@ -115,7 +115,9 @@ public class UserServiceImpl implements UserService {
   @Override
   public void updateUserPassword(Long id, String password) {
     User currentUser = userRepo.findById(id).get();
-    currentUser.setPassword(password);
+    // 处理密码
+    String encodePassword = new BCryptPasswordEncoder().encode(password);
+    currentUser.setPassword(encodePassword);
     userRepo.save(currentUser);
   }
 

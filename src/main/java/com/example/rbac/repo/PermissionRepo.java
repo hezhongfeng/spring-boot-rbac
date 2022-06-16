@@ -11,6 +11,8 @@ public interface PermissionRepo extends JpaRepository<Permission, Long> {
 
   Permission findByName(String name);
 
+  Permission findByKeyName(String name);
+
   Boolean existsByName(String name);
 
   Boolean existsByKeyName(String keyName);
