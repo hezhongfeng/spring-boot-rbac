@@ -9,6 +9,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
+@NamedEntityGraph(name = "users-with-roles",
+    attributeNodes = {@NamedAttributeNode("roles")})
 public class User {
     @Id // 这是一个主键
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 自增

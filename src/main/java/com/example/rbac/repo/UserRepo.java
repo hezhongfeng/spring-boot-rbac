@@ -18,11 +18,11 @@ public interface UserRepo extends JpaRepository<User, Long> {
   User findByUsername(String username);
 
   // 使用图查询，不会造成 N+1 问题
-  @EntityGraph(value = "users-with-roles")
+  @EntityGraph(value = "user-with-roles")
   @Query(value = "SELECT user FROM User user")
   Page<User> findAllUsersWithRoles(Pageable pageable);
 
-  @EntityGraph(value = "users-with-roles")
+  @EntityGraph(value = "user-with-roles")
   @Query(value = "SELECT user FROM User user WHERE user.id = ?1")
   User findUserWithRoles(Long id);
 }

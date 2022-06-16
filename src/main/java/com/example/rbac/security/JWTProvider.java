@@ -13,29 +13,40 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.stereotype.Component;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
-
+@Component
 public class JWTProvider {
 	private static final Logger LOGGER = LoggerFactory.getLogger(JWTProvider.class);
 
-	@Value(value = "${jwt.secret}")
 	private static String jwtSecret;
 
-	@Value(value = "${jwt.expire}")
+	@Value("${jwt.secret}")
+	public void setJwtSecret(String secret) {
+		jwtSecret = secret;
+	}
+
 	private static int jwtExpirationInMs;
 
+	@Value("${jwt.expire}")
+	public void setJwtExpirationInMs(int expire) {
+		jwtExpirationInMs = expire;
+	}
+
 	// 根据subject生成token
-	public static String generateToken(String subject) {
+	public static String generateToken(String subject, List<String> permissions) {
 
 		long currentTimeMillis = System.currentTimeMillis();
-		Date currentDate = new Date(currentTimeMillis);
 		Date expirationDate = new Date(currentTimeMillis + jwtExpirationInMs * 1000);
 
-		return Jwts.builder().setSubject(subject).setIssuedAt(currentDate).setExpiration(expirationDate)
-				.signWith(SignatureAlgorithm.HS512, jwtSecret).compact();
+		return Jwts.builder().setSubject(subject).claim("permissions", permissions)
+				.signWith(SignatureAlgorithm.HS512, jwtSecret).setExpiration(expirationDate).compact();
 	}
 
 	public static Authentication getAuthentication(String token) {
@@ -43,8 +54,15 @@ public class JWTProvider {
 		// 从jwt获取用户权限列
 		// 注意这里不需要从数据库查询，否则会造成性能浪费，只需要在封路成功颁发jwt的时候查询一次就可以了
 		// 关于这部分的讨论：https://stackoverflow.com/questions/51507978/is-it-more-efficient-to-store-the-permissions-of-the-user-in-an-jwt-claim-or-to
-		List<GrantedAuthority> authorities =
-				AuthorityUtils.commaSeparatedStringToAuthorityList((String) claims.get("permissions"));
+		// List<GrantedAuthority> authorities =
+		// AuthorityUtils.commaSeparatedStringToAuthorityList((String) claims.get("permissions"));
+
+
+		Collection<? extends GrantedAuthority> authorities =
+				Arrays.stream(claims.get("permissions").toString().split(","))
+						.map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+
+		// List<String> permissions = (List<String>) claims.get("permissions");
 		// 获取用户Id
 		Long userId = Long.valueOf(claims.getSubject());
 

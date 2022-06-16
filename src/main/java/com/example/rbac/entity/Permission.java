@@ -9,6 +9,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
+@NamedEntityGraph(name = "permission-with-roles",
+    attributeNodes = {@NamedAttributeNode("roles")})
 public class Permission {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

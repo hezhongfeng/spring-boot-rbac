@@ -3,6 +3,7 @@ package com.example.rbac.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.example.rbac.entity.Role;
@@ -48,9 +49,13 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public User addUser(CreateUserDto userDto) {
+
+    // 处理密码
+    String password = new BCryptPasswordEncoder().encode(userDto.getPassword());
+
     User user = new User();
     user.setUsername(userDto.getUsername());
-    user.setPassword(userDto.getPassword());
+    user.setPassword(password);
     user.setNickname(userDto.getNickname());
     user.setDescription(userDto.getDescription());
 

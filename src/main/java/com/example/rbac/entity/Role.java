@@ -9,13 +9,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.*;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
+@NamedEntityGraph(name = "role-with-permissions",
+    attributeNodes = {@NamedAttributeNode("permissions")})
 public class Role {
 
   @Id
