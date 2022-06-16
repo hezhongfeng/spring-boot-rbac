@@ -12,6 +12,9 @@ spring:
     hibernate:
       ddl-auto: update # 指定为update，每次启动项目检测表结构有变化的时候会新增字段，表不存在时会新建
 
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+
 jwt:
   # header: Authorization: Bearer XXXXXX
   # 有效期7天(单位:秒)  60*60*24*7

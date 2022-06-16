@@ -15,11 +15,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 public class JWTProvider {
@@ -45,7 +47,7 @@ public class JWTProvider {
 		long currentTimeMillis = System.currentTimeMillis();
 		Date expirationDate = new Date(currentTimeMillis + jwtExpirationInMs * 1000);
 
-		return Jwts.builder().setSubject(subject).claim("permissions", permissions)
+		return Jwts.builder().setSubject(subject).claim("permissions", String.join(",", permissions))
 				.signWith(SignatureAlgorithm.HS512, jwtSecret).setExpiration(expirationDate).compact();
 	}
 
@@ -54,15 +56,13 @@ public class JWTProvider {
 		// 从jwt获取用户权限列
 		// 注意这里不需要从数据库查询，否则会造成性能浪费，只需要在封路成功颁发jwt的时候查询一次就可以了
 		// 关于这部分的讨论：https://stackoverflow.com/questions/51507978/is-it-more-efficient-to-store-the-permissions-of-the-user-in-an-jwt-claim-or-to
-		// List<GrantedAuthority> authorities =
-		// AuthorityUtils.commaSeparatedStringToAuthorityList((String) claims.get("permissions"));
+		String permissionString = (String) claims.get("permissions");
 
+		List<SimpleGrantedAuthority> authorities =
+				permissionString.isBlank() ? new ArrayList<SimpleGrantedAuthority>()
+						: Arrays.stream(permissionString.split(",")).map(SimpleGrantedAuthority::new)
+								.collect(Collectors.toList());
 
-		Collection<? extends GrantedAuthority> authorities =
-				Arrays.stream(claims.get("permissions").toString().split(","))
-						.map(SimpleGrantedAuthority::new).collect(Collectors.toList());
-
-		// List<String> permissions = (List<String>) claims.get("permissions");
 		// 获取用户Id
 		Long userId = Long.valueOf(claims.getSubject());
 
