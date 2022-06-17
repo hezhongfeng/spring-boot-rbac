@@ -37,7 +37,6 @@ public class AdminRoleController {
   @Autowired
   private RoleRepo roleRepo;
 
-
   @Autowired
   private RoleService roleService;
 

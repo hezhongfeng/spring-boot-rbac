@@ -1,13 +1,10 @@
 package com.example.rbac.login.controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -59,27 +56,17 @@ public class LoginController {
         new LoginResult(token, currentUser.getUserId()));
   }
 
-  @PostMapping("/logout")
-  public RespResult<LoginResult> logout(HttpServletRequest request, HttpServletResponse response) {
-
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-    if (authentication != null) {
-      new SecurityContextLogoutHandler().logout(request, response, authentication);
-    }
-
-    return new RespResult<LoginResult>(200, "登出成功", new LoginResult("", 1L));
-  }
-
   @GetMapping("/current")
   public RespResult<CurrentResult> getCurrentUseer() {
     // 拿到上一步设置的所有权限
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-    UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+    Long userId = Long.parseLong(authentication.getPrincipal().toString());
+
+    User user = userRepo.findById(userId).get();
 
     // 获取完整用户信息
-    CurrentResult currentUser = userService.getCurrentUser(userDetails.getUsername());
+    CurrentResult currentUser = userService.getCurrentUser(user.getUsername());
 
     return new RespResult<CurrentResult>(200, "", currentUser);
   }
