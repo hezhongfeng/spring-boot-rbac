@@ -1,6 +1,7 @@
 package com.example.rbac;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,19 @@ class RbacApplicationTests {
 
 	@Autowired
 	private PermissionRepo permissionRepo;
+
+	@Test
+	void testRepo() {
+		List<User> userList = userRepo.findAllUsersWithRoles();
+		for (User user : userList) {
+			System.out.println(user.getNickname() + "具有角色：");
+			Set<Role> roleList = user.getRoles();
+			for (Role role : roleList) {
+				System.out.println(role.getName() + " ");
+			}
+			System.out.println("----------------");
+		}
+	}
 
 	@Test
 	@Rollback(false)

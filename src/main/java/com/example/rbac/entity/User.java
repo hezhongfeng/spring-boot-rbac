@@ -9,7 +9,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
-@NamedEntityGraph(name = "users-with-roles",
+@NamedEntityGraph(name = "user-with-roles",
     attributeNodes = {@NamedAttributeNode("roles")})
 public class User {
     @Id // 这是一个主键

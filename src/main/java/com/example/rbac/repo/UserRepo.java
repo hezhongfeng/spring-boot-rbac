@@ -1,5 +1,6 @@
 package com.example.rbac.repo;
 
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -21,6 +22,10 @@ public interface UserRepo extends JpaRepository<User, Long> {
   @EntityGraph(value = "user-with-roles")
   @Query(value = "SELECT user FROM User user")
   Page<User> findAllUsersWithRoles(Pageable pageable);
+
+  @EntityGraph(value = "user-with-roles")
+  @Query(value = "SELECT user FROM User user")
+  List<User> findAllUsersWithRoles();
 
   @EntityGraph(value = "user-with-roles")
   @Query(value = "SELECT user FROM User user WHERE user.id = ?1")
