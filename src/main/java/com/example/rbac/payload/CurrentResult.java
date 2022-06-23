@@ -16,8 +16,8 @@ public class CurrentResult {
 
   public CurrentResult() {}
 
-  public CurrentResult(Long userId, String username, String nickname, String tel, String email,
-      String description, List<String> permissions) {
+  public CurrentResult(Long userId, String username, String nickname, String description,
+      List<String> permissions) {
     this.userId = userId;
     this.username = username;
     this.nickname = nickname;
@@ -67,13 +67,9 @@ public class CurrentResult {
 
   @Override
   public String toString() {
-    return "{" +
-      " userId='" + getUserId() + "'" +
-      ", username='" + getUsername() + "'" +
-      ", nickname='" + getNickname() + "'" +
-      ", description='" + getDescription() + "'" +
-      ", permissions='" + getPermissions() + "'" +
-      "}";
+    return "{" + " userId='" + getUserId() + "'" + ", username='" + getUsername() + "'"
+        + ", nickname='" + getNickname() + "'" + ", description='" + getDescription() + "'"
+        + ", permissions='" + getPermissions() + "'" + "}";
   }
 
 }

@@ -7,6 +7,7 @@ import com.example.rbac.entity.User;
 import com.example.rbac.payload.CreateUserDto;
 import com.example.rbac.payload.CurrentResult;
 import com.example.rbac.payload.UpdateUserDto;
+import com.example.rbac.payload.UpdateUserSelfDto;
 
 public interface UserService {
   public Page<User> getAllUsers(Pageable pageable);
@@ -21,7 +22,7 @@ public interface UserService {
 
   public void updateUser(UpdateUserDto userDto, Long id);
 
-  public void updateUserBase(UpdateUserDto userDto, Long id);
+  public void updateUserBase(UpdateUserSelfDto userDto, Long id);
 
   public Boolean existsByUsername(String username);
 

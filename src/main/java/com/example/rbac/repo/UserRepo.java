@@ -23,7 +23,7 @@ public interface UserRepo extends JpaRepository<User, Long> {
   @Query(value = "SELECT user FROM User user")
   Page<User> findAllUsersWithRoles(Pageable pageable);
 
-  @EntityGraph(value = "user-with-roles")
+  @EntityGraph(attributePaths = {"roles"})
   @Query(value = "SELECT user FROM User user")
   List<User> findAllUsersWithRoles();
 

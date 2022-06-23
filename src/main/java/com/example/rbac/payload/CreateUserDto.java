@@ -18,11 +18,6 @@ public class CreateUserDto {
       message = "包括至少1个大写字母，1个小写字母，1个数字，1个特殊字符")
   private String password;
 
-  @Email(message = "邮箱格式不正确")
-  private String email;
-
-  private String tel;
-
   @NotNull(message = "nickname 不能为空")
   private String nickname;
 
@@ -48,22 +43,6 @@ public class CreateUserDto {
 
   public void setPassword(String password) {
     this.password = password;
-  }
-
-  public String getEmail() {
-    return this.email;
-  }
-
-  public void setEmail(String email) {
-    this.email = email;
-  }
-
-  public String getTel() {
-    return this.tel;
-  }
-
-  public void setTel(String tel) {
-    this.tel = tel;
   }
 
   public String getNickname() {
@@ -109,9 +88,9 @@ public class CreateUserDto {
   @Override
   public String toString() {
     return "{" + " username='" + getUsername() + "'" + ", password='" + getPassword() + "'"
-        + ", email='" + getEmail() + "'" + ", tel='" + getTel() + "'" + ", nickname='"
-        + getNickname() + "'" + ", description='" + getDescription() + "'" + ", roleIds='"
-        + getRoleIds() + "'" + "}";
+        + ", nickname='" + getNickname() + "'" + ", description='" + getDescription() + "'"
+        + ", roleIds='" + getRoleIds() + "'" + ", clientIds='" + getClientIds() + "'"
+        + ", organizationId='" + getOrganizationId() + "'" + "}";
   }
 
 }

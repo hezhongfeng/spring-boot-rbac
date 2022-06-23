@@ -11,6 +11,7 @@ import com.example.rbac.entity.User;
 import com.example.rbac.payload.CreateUserDto;
 import com.example.rbac.payload.CurrentResult;
 import com.example.rbac.payload.UpdateUserDto;
+import com.example.rbac.payload.UpdateUserSelfDto;
 import com.example.rbac.repo.RoleRepo;
 import com.example.rbac.repo.UserRepo;
 import java.util.ArrayList;
@@ -91,7 +92,7 @@ public class UserServiceImpl implements UserService {
     userRepo.save(user);
   }
 
-  public void updateUserBase(UpdateUserDto userDto, Long id) {
+  public void updateUserBase(UpdateUserSelfDto userDto, Long id) {
     User user = userRepo.findById(id).get();
     user.setNickname(userDto.getNickname());
     user.setDescription(userDto.getDescription());
