@@ -20,7 +20,7 @@ jwt:
   # 有效期7天(单位:秒)  60*60*24*7
   expire: 604800
   # secret: 秘钥(普通字符串)
-  secret: 1rR0ddcHM6Ly9teS5vc2NoaW5hLm5ldC9ss1LzM2Orc32
+  secret: G2R0ddcHM6Ly9teS5vc2NoaW5hLm5ldC9ss1L4M2Orc32
   # 默认存放token的请求头
   requestHeader: Authorization
   # 默认token前缀
