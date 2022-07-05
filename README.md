@@ -1,10 +1,17 @@
 # spring-boot-rbac
 
-使用分支的方式，展示在 vscode 中完成一个 SpringBoot 的 RBAC 鉴权服务的具体过程，可以用来当做一些后台系统的基础模板
+使用分支的方式，展示在 vscode 中完成一个 SpringBoot 的 RBAC 鉴权服务的具体过程，可以用来当做一些后台系统的基础模板，可以一步一步的按照顺序结合分支代码进行尝试
 
-关键词：vscode springboot java11 jpa gradle rbac
+[在线文档](https://rbac-docs.vercel.app/)
 
-## [1-开发环境准备](https://github.com/hezhongfeng/spring-boot-rbac/tree/session-1)
+[在线体验](https://rbac-front.vercel.app)
+
+| 用户     | 帐户   | 密码     |
+| -------- | ------ | -------- |
+| 管理员   | admin  | password |
+| 普通用户 | normal | password |
+
+## 1-开发环境准备
 
 1. jdk 说明以及安装
 2. gradle 说明和安装配置
