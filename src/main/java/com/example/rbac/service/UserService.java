@@ -34,6 +34,9 @@ public interface UserService {
 
   public void deleteUsers(List<Long> ids);
 
+  public void initAllUsers();
+
+  public void clearAllUsers();
 }
 
 
