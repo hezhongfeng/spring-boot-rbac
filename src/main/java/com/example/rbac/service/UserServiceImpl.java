@@ -6,14 +6,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.example.rbac.entity.Permission;
 import com.example.rbac.entity.Role;
 import com.example.rbac.entity.User;
 import com.example.rbac.payload.CreateUserDto;
 import com.example.rbac.payload.CurrentResult;
 import com.example.rbac.payload.UpdateUserDto;
 import com.example.rbac.payload.UpdateUserSelfDto;
+import com.example.rbac.repo.PermissionRepo;
 import com.example.rbac.repo.RoleRepo;
 import com.example.rbac.repo.UserRepo;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -21,6 +24,9 @@ import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
+
+  @Autowired
+  private PermissionRepo permissionRepo;
 
   @Autowired
   private RoleRepo roleRepo;
@@ -158,4 +164,92 @@ public class UserServiceImpl implements UserService {
       userRepo.deleteById(id);
     }
   }
+
+  public void initAllUsers() {
+    System.out.println("初始化所有的用户以及角色和权限时间：" + LocalDateTime.now());
+
+    // 新增自定义权限
+    if (!permissionRepo.existsByKeyName("custom")) {
+      Permission permission = new Permission();
+      permission.setKeyName("custom");
+      permission.setName("自定义权限");
+      permission.setDescription("自定义的权限，配合前端一起使用");
+      permissionRepo.save(permission);
+    }
+
+    // 新增 admin 权限
+    if (!permissionRepo.existsByKeyName("admin")) {
+      Permission permission = new Permission();
+      permission.setKeyName("admin");
+      permission.setName("管理权限");
+      permission.setDescription("管理的权限，属于这个系统的管理员才可以具有的权限");
+      permissionRepo.save(permission);
+    }
+
+    // 新增自定义角色
+    if (!roleRepo.existsByName("自定义角色")) {
+      Permission permission = permissionRepo.findByKeyName("custom");
+      Set<Permission> permissions = new HashSet<>();
+      permissions.add(permission);
+
+      Role role = new Role();
+      role.setName("自定义角色");
+      role.setDescription("自定义角色");
+      role.setPermissions(permissions);
+      roleRepo.save(role);
+    }
+
+    // 新增管理员角色
+    if (!roleRepo.existsByName("管理员角色")) {
+      Permission permission = permissionRepo.findByKeyName("admin");
+      Set<Permission> permissions = new HashSet<>();
+      permissions.add(permission);
+
+      Role role = new Role();
+      role.setName("管理员角色");
+      role.setDescription("管理员角色，可以管理所有权限");
+      role.setPermissions(permissions);
+      roleRepo.save(role);
+    }
+
+    // 新增管理员用户
+    if (!userRepo.existsByUsername("admin")) {
+      Role role = roleRepo.findByName("管理员角色");
+      Set<Role> roles = new HashSet<>();
+      roles.add(role);
+
+      User user = new User();
+      user.setUsername("admin");
+      user.setPassword(new BCryptPasswordEncoder().encode("password"));
+      user.setRoles(roles);
+      user.setNickname("管理员");
+      user.setDescription("管理员帐户，可以管理其他用户u、角色和权限");
+      userRepo.save(user);
+    }
+
+    // 新增普通用户
+    if (!userRepo.existsByUsername("normal")) {
+      Role role = roleRepo.findByName("自定义角色");
+      Set<Role> roles = new HashSet<>();
+      roles.add(role);
+
+      User user = new User();
+      user.setUsername("normal");
+      user.setPassword(new BCryptPasswordEncoder().encode("password"));
+      user.setRoles(roles);
+      user.setNickname("普通用户");
+      user.setDescription("我是一个普通用户，我拥有自定义权限");
+      userRepo.save(user);
+    }
+  }
+
+  // 清除所有的用户以及角色和权限
+  public void clearAllUsers() {
+    System.out.println("清除所有的用户以及角色和权限时间：" + LocalDateTime.now());
+
+    userRepo.deleteAll();
+    roleRepo.deleteAll();
+    permissionRepo.deleteAll();
+  }
+
 }
