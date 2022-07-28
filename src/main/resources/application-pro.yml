@@ -17,10 +17,16 @@ spring:
 
 jwt:
   # header: Authorization: Bearer XXXXXX
-  expire: 43200
+  expire: 68400
   # secret: 秘钥(普通字符串)
   secret: G2R0ddcHM6Ly9teS5vc2NoaW5hLm5ldC9ss1L4M2Orc32
   # 默认存放token的请求头
   requestHeader: Authorization
   # 默认token前缀
   tokenPrefix: Bearer
+
+refresh:
+  # header: Authorization: Bearer XXXXXX
+  expire: 68400
+  # secret: 秘钥(普通字符串)
+  secret: Rge3refreshcHM6Ly9teS5vc2NoaW5hLm5ldC91LzM67R

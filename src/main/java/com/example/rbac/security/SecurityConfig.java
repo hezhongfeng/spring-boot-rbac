@@ -20,7 +20,7 @@ public class SecurityConfig {
   @Bean
   public WebSecurityCustomizer webSecurityCustomizer() {
 
-    String[] antMatchersAnonymous = {"/api/v1/login/**", "/public/**"};
+    String[] antMatchersAnonymous = {"/api/v1/login/**", "/api/v1/refresh-token/**", "/public/**"};
     return web -> web.ignoring()
         // 放行所有OPTIONS请求
         .antMatchers(HttpMethod.OPTIONS)
