@@ -21,7 +21,7 @@ public class MyAccessDeniedHandler implements AccessDeniedHandler {
 
     response.setContentType("application/json;charset=utf-8");
 
-    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
     response.setContentType("application/json;charset=utf-8");
     RespResult<String> resp = new RespResult<String>(201, "没有对应的权限", null);

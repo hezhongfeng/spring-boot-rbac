@@ -16,8 +16,8 @@ spring:
     exclude: org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
 
 jwt:
-  # header: Authorization: Bearer XXXXXX
-  expire: 68400
+  # 60*60*1
+  expire: 3600
   # secret: 秘钥(普通字符串)
   secret: G2R0ddcHM6Ly9teS5vc2NoaW5hLm5ldC9ss1L4M2Orc32
   # 默认存放token的请求头
@@ -26,7 +26,7 @@ jwt:
   tokenPrefix: Bearer
 
 refresh:
-  # header: Authorization: Bearer XXXXXX
+  # 60*60*24
   expire: 68400
   # secret: 秘钥(普通字符串)
   secret: Rge3refreshcHM6Ly9teS5vc2NoaW5hLm5ldC91LzM67R
