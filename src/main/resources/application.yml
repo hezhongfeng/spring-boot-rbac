@@ -1,0 +1,32 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/rbac?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf-8 # 指定北京时间
+    username: root
+    password: Xy&278721524
+    driver-class-name: com.mysql.cj.jdbc.Driver # 数据库驱动
+
+  jpa:
+    open-in-view: false
+    database: mysql
+    show-sql: true # 默认false，在日志里显示执行的sql语句
+    hibernate:
+      ddl-auto: update # 指定为update，每次启动项目检测表结构有变化的时候会新增字段，表不存在时会新建
+
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+
+jwt:
+  # 60*60*1
+  expire: 3600
+  # secret: 秘钥(普通字符串)
+  secret: aHR0cHM6Ly9teS5vc2NoaW5hLm5ldC91LzM2ODE4Njg=
+  # 默认存放token的请求头
+  requestHeader: Authorization
+  # 默认token前缀
+  tokenPrefix: Bearer
+
+refresh:
+  # 60*60*24
+  expire: 68400
+  # secret: 秘钥(普通字符串)
+  secret: 3refreshcHM6Ly9teS5vc2NoaW5hLm5ldC91LzM67R
